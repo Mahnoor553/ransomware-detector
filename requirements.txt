@@ -1,0 +1,10 @@
+# Secure Backup & Ransomware Detection System
+# Requirements — all from Python standard library, no pip install needed.
+#
+# Python >= 3.8 required
+#
+# Standard library modules used:
+#   os, sys, time, shutil, hashlib, logging, json,
+#   datetime, collections, pathlib, random, string
+#
+# No external packages required.
