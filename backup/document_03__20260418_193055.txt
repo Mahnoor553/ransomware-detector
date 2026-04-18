@@ -1,1 +1,0 @@
-Student database: Name, CGPA, Contact details stored here.
