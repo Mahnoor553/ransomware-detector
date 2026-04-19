@@ -1,14 +1,7 @@
 """
 Ransomware Simulator  —  FOR TESTING ONLY
 ==========================================
-Author : Mahnoor Habib (BITF24M003)
-
-This script mimics what ransomware does WITHOUT using any real malware:
-  • Creates sample files in the monitored folder.
-  • Rapidly overwrites them (simulating encryption).
-  • Prints what it is doing so you can watch the detector respond.
-
-Run the detector in one terminal, then run this script in another.
+Name : Mahnoor Habib (BITF24M003)
 """
 
 import os

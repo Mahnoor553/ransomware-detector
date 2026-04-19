@@ -1,51 +1,44 @@
 # ============================================================
 # Secure Backup and Ransomware Detection System
-# Author  : Mahnoor Habib
+# Name  : Mahnoor Habib
 # Roll No : BITF24M003
 # Subject : Information Security
 # ============================================================
 
-# ── Step 1: Import the tools we need ────────────────────────
-# These are built-in Python libraries. We don't install them.
-# We just "import" them so we can use them.
-
-import os           # used to walk through folders and files
-import sys          # used to read command-line arguments (like "restore")
-import time         # used to make the program wait (sleep) between scans
-import shutil       # used to COPY files (for backups)
-import hashlib      # used to generate SHA-256 fingerprints of files
-import json         # used to save and load data in a file (hashes.json)
-import logging      # used to print and save activity messages
-from datetime import datetime      # used to get the current date and time
-from collections import deque      # used to store recent timestamps
-from pathlib import Path           # used to work with file paths easily
+#  Import the tools
+import os           
+import sys         
+import time         
+import shutil       
+import hashlib      
+import json         
+import logging      
+from datetime import datetime      
+from collections import deque      
+from pathlib import Path           
 
 
-# ── Step 2: Settings (you can change these) ─────────────────
+#  Settings 
+BASE_DIR = Path(__file__).parent       
+MONITORED_DIR = BASE_DIR / "monitored" 
+BACKUP_DIR    = BASE_DIR / "backup"    
+LOG_DIR       = BASE_DIR / "logs"      
+HASH_STORE    = BASE_DIR / "hashes.json"  
 
-BASE_DIR = Path(__file__).parent        # folder where detector.py lives
-MONITORED_DIR = BASE_DIR / "monitored" # folder we WATCH for changes
-BACKUP_DIR    = BASE_DIR / "backup"    # folder where backups are saved
-LOG_DIR       = BASE_DIR / "logs"      # folder where log files are saved
-HASH_STORE    = BASE_DIR / "hashes.json"  # file where fingerprints are saved
-
-POLL_INTERVAL    = 3    # check every 3 seconds
-CHANGE_THRESHOLD = 3    # if 3+ files change in window -> alert
-WINDOW_SECONDS   = 10   # the time window to watch (10 seconds)
+POLL_INTERVAL    = 3   
+CHANGE_THRESHOLD = 3   
+WINDOW_SECONDS   = 10   
 
 
-# ── Step 3: Create folders if they don't exist ───────────────
+#  Create folders 
 MONITORED_DIR.mkdir(parents=True, exist_ok=True)
 BACKUP_DIR.mkdir(parents=True, exist_ok=True)
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 
-# ── Step 4: Set up logging ───────────────────────────────────
-# We want messages to appear on screen AND be saved to a file
-
+#  Set up logging
 log_filename = LOG_DIR / f"detector_{datetime.now().strftime('%Y%m%d_%H%M%S')}.log"
 
-# Fix for Windows: make screen output use UTF-8 encoding
 screen_handler = logging.StreamHandler(sys.stdout)
 screen_handler.stream = open(
     sys.stdout.fileno(), mode='w', encoding='utf-8', buffering=1, closefd=False
@@ -61,11 +54,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-
-# ============================================================
-# SECTION A: HELPER FUNCTIONS
-# ============================================================
-
+#  HELPER FUNCTIONS
 def get_file_fingerprint(filepath):
     """
     Read a file and return its SHA-256 fingerprint (a unique 64-char string).
@@ -77,7 +66,7 @@ def get_file_fingerprint(filepath):
     try:
         with open(filepath, "rb") as file:
             while True:
-                chunk = file.read(65536)    # read 64 KB at a time
+                chunk = file.read(65536)    
                 if not chunk:
                     break
                 hasher.update(chunk)
@@ -150,12 +139,7 @@ def show_alert(message):
     print(f"  *** ALERT *** {message}")
     print(f"{border}\n")
     logger.critical(f"ALERT: {message}")
-
-
-# ============================================================
-# SECTION B: THE MAIN DETECTOR CLASS
-# ============================================================
-
+# THE MAIN DETECTOR CLASS
 class RansomwareDetector:
 
     def __init__(self):
@@ -271,11 +255,7 @@ class RansomwareDetector:
         logger.info(f"  Total alerts  : {self.total_alerts}")
         logger.info("=" * 60)
 
-
-# ============================================================
-# SECTION C: RESTORE FUNCTION
-# ============================================================
-
+#  RESTORE FUNCTION
 def restore_menu():
     """Show all backups and let the user pick one to restore."""
     all_backups = sorted(BACKUP_DIR.glob("*"))
@@ -323,11 +303,7 @@ def restore_menu():
     else:
         print("Restore cancelled.")
 
-
-# ============================================================
-# SECTION D: START THE PROGRAM
-# ============================================================
-
+#  START THE PROGRAM
 def main():
     """
     python detector.py         -> starts monitoring
