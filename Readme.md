@@ -45,14 +45,6 @@ python detector.py restore
 4. If **3 or more files** change within **10 seconds**, a ransomware alert fires.
 5. Backups are timestamped copies stored in `backup/`.
 
-## Key Concepts Demonstrated
-| Concept | Implementation |
-|---|---|
-| Data Integrity | SHA-256 hashing of every file |
-| Threat Detection | Sliding-window burst detection |
-| Secure Backup | Automatic timestamped file copies |
-| Alerting | Console + log file notifications |
-| Recovery | CLI restore menu |
 
 ## Academic Note
 The simulator does **not** use real malware. It only overwrites text files rapidly to trigger the detection logic for testing purposes.
